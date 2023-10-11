@@ -1,4 +1,4 @@
 # Statistics-Homeworks
 
-In this repository will be uploaded code scripts that the professor, to encourage programming skills, will assign us assignments on specific languages during class.
-I chose C# and Javascript as the languages to execute the tasks.
+In this repository, code scripts will be uploaded for assignments assigned by the professor to encourage programming skills in the classroom. 
+For the tasks assigned, I have chosen C# and Javascript as the languages to be used.
