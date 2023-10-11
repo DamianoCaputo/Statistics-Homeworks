@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disegno in JavaScript</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="400" height="400"></canvas>
+
+    <script>
+        // Ottieni il riferimento al canvas
+        var canvas = document.getElementById("myCanvas");
+        var context = canvas.getContext("2d");
+
+        // Disegna un punto
+        context.beginPath();
+        context.arc(50, 50, 2, 0, 2 * Math.PI);
+        context.fillStyle = "red"; // Colore del punto
+        context.fill();
+
+        // Disegna un cerchio
+        var centerX = 150;
+        var centerY = 150;
+        var radius = 30;
+
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        context.fillStyle = "blue"; // Colore del cerchio
+        context.fill();
+        context.lineWidth = 2; // Spessore della linea del bordo
+        context.strokeStyle = "black"; // Colore del bordo
+        context.stroke();
+
+        // Disegna un rettangolo
+        var rectX = 250;
+        var rectY = 100;
+        var rectWidth = 80;
+        var rectHeight = 50;
+
+        context.fillStyle = "green"; // Colore del rettangolo
+        context.fillRect(rectX, rectY, rectWidth, rectHeight);
+    </script>
+</body>
+</html>
