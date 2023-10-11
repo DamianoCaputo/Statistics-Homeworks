@@ -1,0 +1,10 @@
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\bin\Debug\statistic-language-c.exe.config
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\bin\Debug\statistic-language-c.exe
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\bin\Debug\statistic-language-c.pdb
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic-language-c.csproj.AssemblyReference.cache
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic_language_c.Form1.resources
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic_language_c.Properties.Resources.resources
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic-language-c.csproj.GenerateResource.cache
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic-language-c.csproj.CoreCompileInputs.cache
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic-language-c.exe
+C:\Users\damia\Desktop\UNI\Statistics\statistic-language-c\statistic-language-c\obj\Debug\statistic-language-c.pdb
