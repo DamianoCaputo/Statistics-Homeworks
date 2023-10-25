@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Distribuzione di Frequenza</title>
+</head>
+<body>
+  <script>
+    // Funzione per generare N variabili casuali uniformi in [0,1)
+    function generateRandomVariables(N) {
+      const randomVariables = [];
+      for (let i = 0; i < N; i++) {
+        const randomValue = Math.random(); // Genera un numero casuale tra 0 e 1 (escluso)
+        randomVariables.push(randomValue);
+      }
+      return randomVariables;
+    }
+
+    // Funzione per determinare la distribuzione in classi
+    function determineDistribution(randomVariables, k) {
+      const distribution = new Array(k).fill(0);
+      const intervalSize = 1 / k;
+
+      randomVariables.forEach(value => {
+        const index = Math.floor(value / intervalSize);
+        distribution[index]++;
+      });
+
+      return distribution;
+    }
+
+    // Funzione per disegnare l'istogramma della distribuzione
+    function drawHistogram(distribution) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const canvasWidth = 400;
+      const canvasHeight = 200;
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+
+      const maxFrequency = Math.max(...distribution);
+      const barWidth = canvasWidth / distribution.length;
+
+      distribution.forEach((frequency, i) => {
+        const barHeight = (frequency / maxFrequency) * canvasHeight;
+        const x = i * barWidth;
+        const y = canvasHeight - barHeight;
+        ctx.fillStyle = "blue";
+        ctx.fillRect(x, y, barWidth, barHeight);
+      });
+
+      document.body.appendChild(canvas);
+    }
+
+    // Esempio di utilizzo
+    const N = 1000; // Numero di variabili casuali da generare
+    const k = 10;   // Numero di classi
+
+    const randomVariables = generateRandomVariables(N);
+    const distribution = determineDistribution(randomVariables, k);
+    drawHistogram(distribution);
+  </script>
+</body>
+</html>

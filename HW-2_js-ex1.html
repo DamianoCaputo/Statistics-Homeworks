@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Distribuzione di Frequenza</title>
+</head>
+</head>
+    <style>
+        /* Stile per il corpo della tabella */
+        table {
+        border-collapse: collapse;
+        width: 50%;
+        margin: 20px auto;
+        }
+    
+        /* Stile per il titolo della tabella */
+        caption {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin: 10px 0;
+        }
+    
+        /* Stile per le celle della tabella */
+        td, th {
+        border: 1px solid black; /* Bordi neri */
+        text-align: left;
+        padding: 8px;
+        background-color: white; /* Sfondo bianco */
+        }
+    
+        /* Stile per le righe dispari (per una maggiore leggibilità) */
+        tr:nth-child(odd) {
+        background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+  <script>
+
+        // Esempio di dati
+        const hardWorkerData = [
+        5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 4, 5, 5, 5, 5, 5, 4, 4, 4, 5, 4, 4, 2, 4, 4, 5, 4, 4, 4, 4, 3, 4, 4, 5, 4, 5, 4, 5, 4, 4, 4, 4, 4, 5, 4, 3, 4, 4, 4, 5, 3, 4, 4, 5, 4, 5
+        ];
+
+        const ageData = [
+        22, 22, 22, 23, 23, 21, 23, 23, 24, 24, 23, 21, 25, 22, 22, 22, 25, 21, 21, 21, 23, 22, 21, 23, 24, 25, 23, 22, 22, 27, 23, 24, 22, 25, 39, 26, 23, 22, 22, 22, 23, 27, 23, 25, 22, 22, 22, 22, 21, 23, 23, 26, 27, 23, 23, 23, 27, 24, 22, 22, 24, 25
+        ];
+
+        const mainInterestsData = [
+        "Cybersecurity", "Cybersecurity", "Vulnerability Research", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity", "Malware Analysis", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity (blue team)", "Cybersecurity", "Cybersecurity", "Cybersecuity",
+        "Cybersecurity", "Privacy", "Cybercrime and Forensics", "Cybersecurity, OS development",
+        "Cybersecurity", "Cybersecurity, Networks", "Cybersecurity, Networks", "Cybersecurity",
+        "Computer Science", "cybersecurity, ai", "Cybersecuirity", "cybersecurity, IT, international studies",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity,AI,Network", "IT", "Management Of Information Security, Data privacy",
+        "Cybersecurity, AI", "climbing", "Cybersecurity", "Cybersecurity, Software testing", "Cybersecurity, Network",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity, Privacy", "Cybersecurity", "Computer science, Cybserscurity, Exploits, Vulnerabilties",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity, AI", "Cybersecurity, operating systmes", "Cybersecurity", "Cybersecurity, OS",
+        "Computer science, physics, phylosophy", "Cybersecurity, Networks", "Cybersecurity, Entrepreneurship, Network", "Cybersecurity",
+        "Cybersecurity", "IT, Embedded, Videogames AI", "climbing", "IT, Networks, Cooking", "Cybersecurity, Videogames"
+        ];
+
+        // Funzione per calcolare la distribuzione di frequenza assoluta
+        function calculateFrequency(data) {
+        const frequency = {};
+        data.forEach(item => {
+            if (frequency[item]) {
+            frequency[item]++;
+            } else {
+            frequency[item] = 1;
+            }
+        });
+        return frequency;
+        }
+
+        // Funzione per calcolare la distribuzione di frequenza relativa
+        function calculateRelativeFrequency(data) {
+        const absoluteFrequency = calculateFrequency(data);
+        const total = data.length;
+        const relativeFrequency = {};
+        for (const key in absoluteFrequency) {
+            relativeFrequency[key] = absoluteFrequency[key] / total;
+        }
+        return relativeFrequency;
+        }
+
+        // Funzione per calcolare la distribuzione di frequenza in percentuale
+        function calculatePercentageFrequency(data) {
+        const relativeFrequency = calculateRelativeFrequency(data);
+        const percentageFrequency = {};
+        for (const key in relativeFrequency) {
+            percentageFrequency[key] = (relativeFrequency[key] * 100).toFixed(2) + "%";
+        }
+        return percentageFrequency;
+        }
+
+        // Funzione per creare una tabella HTML dai dati di frequenza
+        function createFrequencyTable(frequency, relativeFrequency, percentageFrequency, title) {
+        // Ordina i dati in base alla frequenza percentuale crescente
+        const sortedData = Object.keys(percentageFrequency).sort((a, b) => {
+            return parseFloat(percentageFrequency[a]) - parseFloat(percentageFrequency[b]);
+        });
+
+        const table = document.createElement("table");
+        table.innerHTML = `<caption>${title}</caption><tr><th>Value</th><th>Absolute Frequency</th><th>Relative Frequency</th><th>Percentage Frequency</th></tr>`;
+
+        for (const key of sortedData) {
+            const row = table.insertRow();
+            row.insertCell(0).textContent = key;
+            row.insertCell(1).textContent = frequency[key];
+            row.insertCell(2).textContent = relativeFrequency[key];
+            row.insertCell(3).textContent = percentageFrequency[key];
+        }
+
+        return table;
+        }
+
+        // Calcola e visualizza le tabelle per le colonne dei dati
+        const hardWorkerFrequency = calculateFrequency(hardWorkerData);
+        const hardWorkerRelativeFrequency = calculateRelativeFrequency(hardWorkerData);
+        const hardWorkerPercentageFrequency = calculatePercentageFrequency(hardWorkerData);
+        const hardWorkerTable = createFrequencyTable(
+        hardWorkerFrequency,
+        hardWorkerRelativeFrequency,
+        hardWorkerPercentageFrequency,
+        "Frequency Distribution (Hard Worker)"
+        );
+        document.body.appendChild(hardWorkerTable);
+
+        const ageFrequency = calculateFrequency(ageData);
+        const ageRelativeFrequency = calculateRelativeFrequency(ageData);
+        const agePercentageFrequency = calculatePercentageFrequency(ageData);
+        const ageTable = createFrequencyTable(
+        ageFrequency,
+        ageRelativeFrequency,
+        agePercentageFrequency,
+        "Frequency Distribution (Age)"
+        );
+        document.body.appendChild(ageTable);
+
+        const mainInterestsFrequency = calculateFrequency(mainInterestsData);
+        const mainInterestsRelativeFrequency = calculateRelativeFrequency(mainInterestsData);
+        const mainInterestsPercentageFrequency = calculatePercentageFrequency(mainInterestsData);
+        const mainInterestsTable = createFrequencyTable(
+        mainInterestsFrequency,
+        mainInterestsRelativeFrequency,
+        mainInterestsPercentageFrequency,
+        "Frequency Distribution (Main Interests)"
+        );
+        document.body.appendChild(mainInterestsTable);
+
+    </script>
+</body>
+</html>

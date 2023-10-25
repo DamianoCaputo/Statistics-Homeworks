@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Joint Distribution</title>
+</head>
+</head>
+    <style>
+        /* Stile per il corpo della tabella */
+        table {
+        border-collapse: collapse;
+        width: 50%;
+        margin: 20px auto;
+        }
+    
+        /* Stile per il titolo della tabella */
+        caption {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin: 10px 0;
+        }
+    
+        /* Stile per le celle della tabella */
+        td, th {
+        border: 1px solid black; /* Bordi neri */
+        text-align: left;
+        padding: 8px;
+        background-color: white; /* Sfondo bianco */
+        }
+    
+        /* Stile per le righe dispari (per una maggiore leggibilità) */
+        tr:nth-child(odd) {
+        background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+  <script>
+        const ageData = [
+        22, 22, 22, 23, 23, 21, 23, 23, 24, 24, 23, 21, 25, 22, 22, 22, 25, 21, 21, 21, 23, 22, 21, 23, 24, 25, 23, 22, 22, 27, 23, 24, 22, 25, 39, 26, 23, 22, 22, 22, 23, 27, 23, 25, 22, 22, 22, 22, 21, 23, 23, 26, 27, 23, 23, 23, 27, 24, 22, 22, 24, 25
+        ];
+
+        const mainInterestsData = [
+        "Cybersecurity", "Cybersecurity", "Vulnerability Research", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity", "Malware Analysis", "Cybersecurity", "Cybersecurity",
+        "Cybersecurity", "Cybersecurity (blue team)", "Cybersecurity", "Cybersecurity", "Cybersecuity",
+        "Cybersecurity", "Privacy", "Cybercrime and Forensics", "Cybersecurity, OS development",
+        "Cybersecurity", "Cybersecurity, Networks", "Cybersecurity, Networks", "Cybersecurity",
+        "Computer Science", "cybersecurity, ai", "Cybersecuirity", "cybersecurity, IT, international studies",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity,AI,Network", "IT", "Management Of Information Security, Data privacy",
+        "Cybersecurity, AI", "climbing", "Cybersecurity", "Cybersecurity, Software testing", "Cybersecurity, Network",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity, Privacy", "Cybersecurity", "Computer science, Cybserscurity, Exploits, Vulnerabilties",
+        "Cybersecurity", "Cybersecurity", "Cybersecurity, AI", "Cybersecurity, operating systmes", "Cybersecurity", "Cybersecurity, OS",
+        "Computer science, physics, phylosophy", "Cybersecurity, Networks", "Cybersecurity, Entrepreneurship, Network", "Cybersecurity",
+        "Cybersecurity", "IT, Embedded, Videogames AI", "climbing", "IT, Networks, Cooking", "Cybersecurity, Videogames"
+        ];
+
+        // Funzione per calcolare la distribuzione congiunta
+        function calculateJointDistribution(data1, data2) {
+        const jointDistribution = {};
+
+        for (let i = 0; i < data1.length; i++) {
+            const key = `${data1[i]} - ${data2[i]}`;
+            if (jointDistribution[key]) {
+            jointDistribution[key]++;
+            } else {
+            jointDistribution[key] = 1;
+            }
+        }
+
+        return jointDistribution;
+        }
+
+        // Funzione per creare una tabella HTML dalla distribuzione congiunta ordinata per frequenza
+        function createJointDistributionTable(jointDistribution) {
+        // Ordina la distribuzione congiunta in base alla frequenza
+        const sortedJointDistribution = Object.entries(jointDistribution)
+            .filter(([key, frequency]) => key && frequency)
+            .sort((a, b) => b[1] - a[1]);
+        
+        const table = document.createElement("table");
+        table.innerHTML = "<caption>Joint Distribution (Age & Main Interests)</caption><tr><th>Age</th><th>Main Interests</th><th>Frequency</th></tr>";
+
+        for (const [key, frequency] of sortedJointDistribution) {
+            const [age, interests] = key.split(' - ');
+            const row = table.insertRow();
+            row.insertCell(0).textContent = age;
+            row.insertCell(1).textContent = interests;
+            row.insertCell(2).textContent = frequency;
+        }
+
+        return table;
+        }
+
+        // Calcola e visualizza la tabella della distribuzione congiunta ordinata per frequenza
+        const jointDistribution = calculateJointDistribution(ageData, mainInterestsData);
+        const jointDistributionTable = createJointDistributionTable(jointDistribution);
+
+        // Assicurati di aver caricato il tuo codice in un ambiente che supporta document.body
+        // Ad esempio, puoi eseguirlo all'interno di un browser o di un ambiente Node.js con un modulo DOM.
+        document.body.appendChild(jointDistributionTable);
+
+    </script>
+</body>
+</html>
