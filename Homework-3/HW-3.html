@@ -7,21 +7,25 @@
 <body>
     <h1>Security Score Simulation</h1>
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-        <div style="margin-bottom: 20px; width: 48%;">
+        <div style="margin-right: 20px; margin-bottom: 20px;">
             <h2>Security Score Trajectories</h2>
             <canvas id="scoreChart" width="400" height="200"></canvas>
         </div>
-        <div style="margin-bottom: 20px; width: 48%;">
-            <h2>Penetration Frequencies</h2>
-            <canvas id="penetrationChart" width="400" height="200"></canvas>
+        <div style="margin-right: 20px; margin-bottom: 20px;">
+            <h2>Attack Distribution</h2>
+            <canvas id="attackDistributionChart" width="400" height="200"></canvas>
         </div>
-        <div style="margin-bottom: 20px; width: 48%;">
+        <div style="margin-right: 20px; margin-bottom: 20px;">
+            <h2>Cumulative Penetration</h2>
+            <canvas id="cumulativePenetrationChart" width="400" height="200"></canvas>
+        </div>
+        <div style="margin-right: 20px; margin-bottom: 20px;">
             <h2>Relative Frequencies</h2>
-            <canvas id="relativeFrequencyChart" width="400" height="200"></canvas>
+            <canvas id="relativeFrequenciesChart" width="400" height="200"></canvas>
         </div>
-        <div style="margin-bottom: 20px; width: 48%;">
+        <div style="margin-bottom: 20px;">
             <h2>Normalized Ratios</h2>
-            <canvas id="normalizedRatioChart" width="400" height="200"></canvas>
+            <canvas id="normalizedRatiosChart" width="400" height="200"></canvas>
         </div>
     </div>
     <script>
@@ -50,7 +54,11 @@
         const relativeFrequencies = f.map(frequency => frequency / N);
         const normalizedRatios = f.map(frequency => frequency / Math.sqrt(N));
 
-        // Create charts
+        // Create charts for the remaining three histograms
+        const attackDistributionData = attackDays.map(day => {
+            return scoreData.map(systemScores => systemScores[day - 1] === -1 ? 1 : 0).reduce((a, b) => a + b, 0);
+        });
+
         const scoreChart = new Chart(document.getElementById('scoreChart').getContext('2d'), {
             type: 'line',
             data: {
@@ -60,50 +68,98 @@
                     data: systemScores,
                 })),
             },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                    },
+                },
+            },
         });
 
-        const penetrationChart = new Chart(document.getElementById('penetrationChart').getContext('2d'), {
+        const attackDistributionChart = new Chart(document.getElementById('attackDistributionChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: attackDays,
                 datasets: [
                     {
-                        label: 'Frequency of Penetration',
-                        data: f,
+                        label: 'Attack Distribution',
+                        data: attackDistributionData,
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                     },
                 ],
             },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
         });
 
-        const relativeFrequencyChart = new Chart(document.getElementById('relativeFrequencyChart').getContext('2d'), {
+        const cumulativePenetrationChart = new Chart(document.getElementById('cumulativePenetrationChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: attackDays,
                 datasets: [
                     {
-                        label: 'Relative Frequency',
-                        data: relativeFrequencies,
+                        label: 'Cumulative Penetration',
+                        data: f,
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                     },
                 ],
             },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
         });
 
-        const normalizedRatioChart = new Chart(document.getElementById('normalizedRatioChart').getContext('2d'), {
+        const relativeFrequenciesChart = new Chart(document.getElementById('relativeFrequenciesChart').getContext('2d'), {
             type: 'bar',
             data: {
                 labels: attackDays,
                 datasets: [
                     {
-                        label: 'Normalized Ratio',
-                        data: normalizedRatios,
+                        label: 'Relative Frequencies',
+                        data: relativeFrequencies,
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     },
                 ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+
+        const normalizedRatiosChart = new Chart(document.getElementById('normalizedRatiosChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: attackDays,
+                datasets: [
+                    {
+                        label: 'Normalized Ratios',
+                        data: normalizedRatios,
+                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
+                    },
+                ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
             },
         });
     </script>
 </body>
 </html>
-
