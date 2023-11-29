@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attack Simulation</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .input-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin: 10px;
+        }
+        .input-container label {
+            margin-right: 10px;
+        }
+        .plot-container {
+            margin-top: 20px;
+            width: 80%; /* Imposta la larghezza desiderata del grafico */
+            height: 800px; /* Imposta l'altezza desiderata del grafico */
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulation of Attacks on M Servers</h1>
+
+    <div class="input-container">
+        <label for="numServers">Number of server (M): </label>
+        <input type="number" id="numServers" />
+    </div>
+    <div class="input-container">
+        <label for="numMonths">Duration in Years (T): </label>
+        <input type="number" id="numMonths" />
+    </div>
+    <div class="input-container">
+        <label for="lambda">Probability Lambda:</label>
+        <select id="lambda">
+            <option value="0.10">10%</option>
+            <option value="0.15">15%</option>
+            <option value="0.20">20%</option>
+            <option value="0.25">25%</option>
+            <option value="0.30">30%</option>
+            <option value="0.35">35%</option>
+            <option value="0.40">40%</option>
+            <option value="0.45">45%</option>
+            <option value="0.50">50%</option>
+            <option value="0.55">55%</option>
+            <option value="0.60">60%</option>
+            <option value="0.65">65%</option>
+            <option value="0.70">70%</option>
+            <option value="0.75">75%</option>
+            <option value="0.80">80%</option>
+            <option value="0.85">85%</option>
+            <option value="0.90">90%</option>
+            <option value="0.95">95%</option>
+            <option value="0.100">100%</option>
+            <!-- Aggiungi altre opzioni desiderate -->
+        </select>
+    </div>
+    <button onclick="generateLinePlot()">Create Graph</button>
+
+    <div id="plot" class="plot-container"></div>
+    <script>
+        function generateLinePlot() {
+        const numServers = parseInt(document.getElementById("numServers").value);
+        const numYears = parseInt(document.getElementById("numMonths").value); // Cambia la variabile in "numYears"
+        const lambda = parseFloat(document.getElementById("lambda").value);
+
+        const serverData = [];
+
+        for (let i = 0; i < numServers; i++) {
+            const serverAttacks = [];
+            let attackCount = 0;
+
+            for (let year = 1; year <= numYears; year++) { // Cambia la variabile in "year"
+                for (let month = 0; month < 12; month++) { // Itera attraverso i mesi nell'anno
+                    if (Math.random() <= lambda / 12) {
+                        attackCount++;
+                    }
+                }
+                serverAttacks.push(attackCount);
+            }
+
+            serverData.push({
+                x: Array.from({ length: numYears }, (_, i) => i + 1), // Usiamo gli anni
+                y: serverAttacks,
+                mode: 'lines',
+                name: `Server ${i + 1}`
+            });
+        }
+
+        const layout = {
+            xaxis: { title: 'Years' }, // Cambia il titolo dell'asse x in "Years"
+            yaxis: { title: 'Number of Attacks' },
+            title: 'Graph of Server Attacks Over Time'
+        };
+
+        const attackDistributionData = [{
+            x: serverData.map(server => server.y[server.y.length - 1]), // Usiamo l'ultimo anno per la distribuzione
+            type: 'histogram',
+            name: 'Distribution of Attacks',
+            opacity: 0.5
+        }];
+
+        Plotly.newPlot('plot', serverData, layout);
+        Plotly.addTraces('plot', attackDistributionData);
+    }
+
+    </script>
+</body>
+</html>
