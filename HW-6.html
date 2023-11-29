@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Attacks Line Chart</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>System Attacks Line Chart</h1>
+
+    <div>
+        <label for="lambda">Probability Lambda:</label>
+        <input type="number" id="lambda" step="0.01" />
+    </div>
+    <div>
+        <label for="numSystems">Number of Systems (M):</label>
+        <input type="number" id="numSystems" />
+    </div>
+    <div>
+        <label for="numAttacks">Number of Attacks (N):</label>
+        <input type="number" id="numAttacks" />
+    </div>
+    <div>
+        <label for="thresholds">Thresholds (P values separated by commas):</label>
+        <input type="text" id="thresholds" />
+    </div>
+    <button onclick="generateLineChart()">Generate Chart</button>
+
+    <!-- HTML canvas element where the chart will be drawn -->
+    <canvas id="myLineChart" width="800" height="400"></canvas>
+
+    <div>
+        <h2>Thresholds Summary</h2>
+        <table id="thresholdsTable">
+            <thead>
+                <tr>
+                    <th>Threshold</th>
+                    <th>Attacks Exceeded</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        function generateLineChart() {
+            // Get user input values
+            const lambda = parseFloat(document.getElementById('lambda').value);
+            const numSystems = parseInt(document.getElementById('numSystems').value);
+            const numAttacks = parseInt(document.getElementById('numAttacks').value);
+            const thresholdsInput = document.getElementById('thresholds').value;
+
+            // Parse thresholds from user input
+            const thresholds = thresholdsInput.split(',').map(value => parseFloat(value));
+
+            // Generate data for the line chart
+            const data = {
+                labels: Array.from({ length: numAttacks }, (_, i) => `Attack ${i + 1}`),
+                datasets: []
+            };
+
+            const thresholdsSummary = {};
+
+            for (let i = 0; i < numSystems; i++) {
+                const systemAttacks = [];
+                let systemScore = 0;
+
+                for (let attack = 1; attack <= numAttacks; attack++) {
+                    // Adjust system score based on lambda
+                    systemScore += (Math.random() <= lambda) ? 1 : 0;
+
+                    // Check if the system is to be discarded based on thresholds
+                    const exceededThresholds = thresholds.filter(threshold => systemScore >= threshold);
+
+                    systemAttacks.push(systemScore);
+
+                    exceededThresholds.forEach(threshold => {
+                        if (!thresholdsSummary[threshold]) {
+                            thresholdsSummary[threshold] = 1;
+                        } else {
+                            thresholdsSummary[threshold]++;
+                        }
+                    });
+                }
+
+                data.datasets.push({
+                    label: `System ${i + 1}`,
+                    borderColor: getRandomColor(),
+                    data: systemAttacks,
+                    fill: false
+                });
+            }
+
+            // Configuration options for the chart
+            const options = {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Attacks'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'System Attacks Line Chart'
+                }
+            };
+
+            // Add threshold lines to the chart
+            thresholds.forEach((threshold, index) => {
+                data.datasets.push({
+                    label: `Threshold ${index + 1}`,
+                    borderColor: 'rgba(255, 0, 0, 0.5)',
+                    data: Array(numAttacks).fill(threshold),
+                    fill: false,
+                    borderDash: [5, 5] // Dashed line
+                });
+            });
+
+            // Get the canvas element
+            const ctx = document.getElementById('myLineChart').getContext('2d');
+
+            // Create a new line chart
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+
+            // Update table with thresholds summary
+            updateThresholdsTable(thresholdsSummary);
+        }
+
+        // Function to generate a random color for each system line
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to update the thresholds table
+        function updateThresholdsTable(thresholdsSummary) {
+            const tableBody = document.querySelector('#thresholdsTable tbody');
+            tableBody.innerHTML = '';
+
+            for (const threshold in thresholdsSummary) {
+                const row = tableBody.insertRow();
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+
+                cell1.textContent = threshold;
+                cell2.textContent = thresholdsSummary[threshold];
+            }
+        }
+    </script>
+</body>
+
+</html>
