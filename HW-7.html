@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stochastic Differential Equation Simulation</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        #chart-container {
+            margin-top: 20px;
+        }
+
+        input {
+            width: 150px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Stochastic Differential Equation Simulation</h1>
+
+    <div>
+        <label for="initialValue">Initial Value:</label>
+        <input type="number" id="initialValue" step="0.1" />
+    </div>
+    <div>
+        <label for="drift">Drift (Deterministic Part):</label>
+        <input type="number" id="drift" step="0.1" />
+    </div>
+    <div>
+        <label for="volatility">Volatility (Stochastic Part):</label>
+        <input type="number" id="volatility" step="0.1" />
+    </div>
+    <div>
+        <label for="timeStep">Time Step:</label>
+        <input type="number" id="timeStep" step="0.1" />
+    </div>
+    <div>
+        <label for="numSteps">Number of Steps:</label>
+        <input type="number" id="numSteps" />
+    </div>
+    <div>
+        <label for="numPaths">Number of Paths:</label>
+        <input type="number" id="numPaths" />
+    </div>
+    <button onclick="generateLineChart()">Generate Chart</button>
+
+    <!-- Chart container -->
+    <div id="chart-container">
+        <!-- HTML canvas element where the chart will be drawn -->
+        <canvas id="myLineChart" width="1000" height="500"></canvas>
+    </div>
+
+    <script>
+        function generateLineChart() {
+            // Get user input values
+            const initialValue = parseFloat(document.getElementById('initialValue').value);
+            const drift = parseFloat(document.getElementById('drift').value);
+            const volatility = parseFloat(document.getElementById('volatility').value);
+            const timeStep = parseFloat(document.getElementById('timeStep').value);
+            const numSteps = parseInt(document.getElementById('numSteps').value);
+            const numPaths = parseInt(document.getElementById('numPaths').value);
+
+            // Generate data for the line chart using Euler–Maruyama method
+            const data = {
+                labels: Array.from({ length: numSteps + 1 }, (_, i) => i * timeStep),
+                datasets: []
+            };
+
+            for (let path = 0; path < numPaths; path++) {
+                const pathValues = generateStochasticProcess(initialValue, drift, volatility, timeStep, numSteps);
+                const color = getRandomColor();
+
+                data.datasets.push({
+                    label: `Path ${path + 1}`,
+                    borderColor: color,
+                    data: pathValues,
+                    fill: false
+                });
+            }
+
+            // Configuration options for the chart
+            const options = {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Value'
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Stochastic Differential Equation Simulation'
+                }
+            };
+
+            // Get the canvas element
+            const ctx = document.getElementById('myLineChart').getContext('2d');
+
+            // Create a new line chart
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: options
+            });
+        }
+
+        // Function to generate a random color for the line
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        // Function to generate a stochastic process using Euler–Maruyama method
+        function generateStochasticProcess(initialValue, drift, volatility, timeStep, numSteps) {
+            const values = [initialValue];
+
+            for (let i = 0; i < numSteps; i++) {
+                const randomIncrement = Math.sqrt(timeStep) * getRandomNormal();
+                const newValue = values[i] + drift * timeStep + volatility * randomIncrement;
+                values.push(newValue);
+            }
+
+            return values;
+        }
+
+        // Function to generate a random sample from a normal distribution (standard normal)
+        function getRandomNormal() {
+            const u = 1 - Math.random(); // Subtraction to flip the distribution
+            const v = 1 - Math.random();
+            return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        }
+    </script>
+</body>
+
+</html>
